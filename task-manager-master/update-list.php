@@ -26,10 +26,7 @@
         {
             //Get the Value from Database
             $row = mysqli_fetch_assoc($res); //Value is in array
-            
-            //printing $row array
-            //print_r($row);
-            
+
             //Create Individual Variable to save the data
             $list_name = $row['list_name'];
             $list_description = $row['list_description'];
