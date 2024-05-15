@@ -2,216 +2,136 @@
     include('config/constants.php');
 ?>
 
-<html>
-    <head>
-        <title>Task Manager with PHP and MySQL</title>
-        <link rel="stylesheet" href="<?php echo SITEURL; ?>css/style.css" />
-    </head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager with PHP and MySQL</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="<?php echo SITEURL; ?>css/style.css" />
+</head>
+<body>
     
-    <body>
-    
-        <div class="wrapper">
-        
-        <h1>homeWork manager</h1>
+<div class="container mt-4">
+    <h1 class="text-center">Homework Manager</h1>
 
-        
-        <a class="btn-secondary" href="<?php echo SITEURL; ?>">Home</a>
-        
-        <h3>Add Task Page</h3>
-        
-        <p>
-            <?php 
-            
-                if(isset($_SESSION['add_fail']))
-                {
-                    echo $_SESSION['add_fail'];
-                    unset($_SESSION['add_fail']);
-                }
-            
-            ?>
-        </p>
-        
-        <form method="POST" action="">
-            
-            <table class="tbl-half">
-                <tr>
-                    <td>Task Name: </td>
-                    <td><input type="text" name="task_name" placeholder="Type your Task Name" required="required" /></td>
-                </tr>
-                
-                <tr>
-                    <td>Task Description: </td>
-                    <td><textarea name="task_description" placeholder="Type Task Description"></textarea></td>
-                </tr>
-                
-                <tr>
-                    <td>Select List: </td>
-                    <td>
-                        <select name="list_id">
-                            
-                            <?php 
-                                
-                                //Connect Database
-                                $conn = mysqli_connect(LOCALHOST, DB_USERNAME, DB_PASSWORD) or die(mysqli_error());
-                                
-                                //SElect Database
-                                $db_select = mysqli_select_db($conn, DB_NAME) or die(mysqli_error());
-                                
-                                //SQL query to get the list from table
-                                $sql = "SELECT * FROM tbl_list";
-                                
-                                //Execute Query
-                                $res = mysqli_query($conn, $sql);
-                                
-                                //Check whether the query executed or not
-                                if($res==true)
-                                {
-                                    //Create variable to Count Rows
-                                    $count_rows = mysqli_num_rows($res);
-                                    
-                                    //If there is data in database then display all in dropdows else display None as option
-                                    if($count_rows>0)
-                                    {
-                                        //display all lists on dropdown from database
-                                        while($row=mysqli_fetch_assoc($res))
-                                        {
-                                            $list_id = $row['list_id'];
-                                            $list_name = $row['list_name'];
-                                            ?>
-                                            <option value="<?php echo $list_id ?>"><?php echo $list_name; ?></option>
-                                            <?php
-                                        }
-                                    }
-                                    else
-                                    {
-                                        //Display None as option
-                                        ?>
-                                        <option value="0">None</option>p
-                                        <?php
-                                    }
-                                    
-                                }
-                            ?>
-                        
-                            
-                        </select>
-                    </td>
-                </tr>
-                
-                <tr>
-                    <td>Priority: </td>
-                    <td>
-                        <select name="priority">
-                            <option value="High">High</option>
-                            <option value="Medium">Medium</option>
-                            <option value="Low">Low</option>
-                        </select>
-                    </td>
-                </tr>
-                
-                <tr>
-                    <td>Deadline: </td>
-                    <td><input type="date" name="deadline" /></td>
-                </tr>
-                
-                <tr>
-                    <td><input class="btn-primary btn-lg" type="submit" name="submit" value="SAVE" /></td>
-                </tr>
-                
-            </table>
-            
-        </form>
-        
-        </div>
-    </body>
+    <div class="mb-4">
+        <a class="btn btn-secondary" href="<?php echo SITEURL; ?>">Home</a>
+    </div>
     
+    <h3>Add Task Page</h3>
+    
+    <p>
+        <?php 
+            if(isset($_SESSION['add_fail']))
+            {
+                echo '<div class="alert alert-danger">'.$_SESSION['add_fail'].'</div>';
+                unset($_SESSION['add_fail']);
+            }
+        ?>
+    </p>
+    
+    <form method="POST" action="">
+        <div class="form-group">
+            <label for="task_name">Task Name:</label>
+            <input type="text" class="form-control" id="task_name" name="task_name" placeholder="Type your Task Name" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="task_description">Task Description:</label>
+            <textarea class="form-control" id="task_description" name="task_description" placeholder="Type Task Description"></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="list_id">Select List:</label>
+            <select class="form-control" id="list_id" name="list_id">
+                <?php 
+                    $conn = mysqli_connect(LOCALHOST, DB_USERNAME, DB_PASSWORD) or die(mysqli_error($conn));
+                    $db_select = mysqli_select_db($conn, DB_NAME) or die(mysqli_error($conn));
+                    
+                    $sql = "SELECT * FROM tbl_list";
+                    $res = mysqli_query($conn, $sql);
+                    
+                    if($res==true)
+                    {
+                        $count_rows = mysqli_num_rows($res);
+                        
+                        if($count_rows>0)
+                        {
+                            while($row=mysqli_fetch_assoc($res))
+                            {
+                                $list_id = $row['list_id'];
+                                $list_name = $row['list_name'];
+                                echo "<option value='$list_id'>$list_name</option>";
+                            }
+                        }
+                        else
+                        {
+                            echo "<option value='0'>None</option>";
+                        }
+                    }
+                ?>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="priority">Priority:</label>
+            <select class="form-control" id="priority" name="priority">
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="deadline">Deadline:</label>
+            <input type="date" class="form-control" id="deadline" name="deadline">
+        </div>
+        
+        <button type="submit" name="submit" class="btn btn-primary btn-lg">SAVE</button>
+    </form>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
 </html>
 
-
 <?php 
-
-    //Check whether the SAVE button is clicked or not
     if(isset($_POST['submit']))
     {
-        //echo "Button Clicked";
-        //Get all the Values from Form
         $task_name = $_POST['task_name'];
         $task_description = $_POST['task_description'];
         $list_id = $_POST['list_id'];
         $priority = $_POST['priority'];
         $deadline = $_POST['deadline'];
         
-        //Connect Database
-        $conn2 = mysqli_connect(LOCALHOST, DB_USERNAME, DB_PASSWORD) or die(mysqli_error());
+        $conn2 = mysqli_connect(LOCALHOST, DB_USERNAME, DB_PASSWORD) or die(mysqli_error($conn2));
+        $db_select2 = mysqli_select_db($conn2, DB_NAME) or die(mysqli_error($conn2));
         
-        //SElect Database
-        $db_select2 = mysqli_select_db($conn2, DB_NAME) or die(mysqli_error());
-        
-        //CReate SQL Query to INSERT DATA into DAtabase
         $sql2 = "INSERT INTO tal_tasks SET 
             task_name = '$task_name',
             task_description = '$task_description',
             list_id = $list_id,
             priority = '$priority',
-            deadline = '$deadline'
-        ";
+            deadline = '$deadline'";
         
-        //Execute Query
         $res2 = mysqli_query($conn2, $sql2);
         
-        //Check whetehre the query executed successfully or not
         if($res2==true)
         {
-            //Query Executed and Task Inserted Successfully
             $_SESSION['add'] = "Task Added Successfully.";
-            
-            //Redirect to Homepage
             header('location:'.SITEURL);
-            
         }
         else
         {
-            //FAiled to Add TAsk
             $_SESSION['add_fail'] = "Failed to Add Task";
-            //Redirect to Add TAsk Page
             header('location:'.SITEURL.'add-task.php');
         }
     }
-
 ?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -2,156 +2,85 @@
     include('config/constants.php');
 ?>
 
-<html>
-    <head>
-        <title>Task Manager with PHP and MySQL</title>
-        <link rel="stylesheet" href="<?php echo SITEURL; ?>css/style.css" />
-    </head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager with PHP and MySQL</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="<?php echo SITEURL; ?>css/style.css" />
+</head>
+<body>
     
-    <body>
-        
-        <div class="wrapper">
-    
-        <h1>homeWork manager</h1>
+<div class="container mt-4">
+    <h1 class="text-center">Homework Manager</h1>
 
-        
-        <a class="btn-secondary" href="<?php echo SITEURL; ?>">Home</a>
-        <a class="btn-secondary" href="<?php echo SITEURL; ?>manage-list.php">Manage Lists</a>
-        
-        
-        <h3>Add List Page</h3>
-        
-        <p>
-        
+    <div class="mb-4">
+        <a class="btn btn-secondary" href="<?php echo SITEURL; ?>">Home</a>
+        <a class="btn btn-secondary" href="<?php echo SITEURL; ?>manage-list.php">Manage Lists</a>
+    </div>
+    
+    <h3>Add List Page</h3>
+    
+    <p>
         <?php 
-        
-            //Check whether the session is created or not
             if(isset($_SESSION['add_fail']))
             {
-                //display session message
-                echo $_SESSION['add_fail'];
-                //Remove the message after displaying once
+                echo '<div class="alert alert-danger">'.$_SESSION['add_fail'].'</div>';
                 unset($_SESSION['add_fail']);
             }
-        
         ?>
-        
-        </p>
-        
-        <!-- Form to Add List Starts Here -->
-        
-        <form method="POST" action="">
-            
-            <table class="tbl-half">
-                <tr>
-                    <td>List Name: </td>
-                    <td><input type="text" name="list_name" placeholder="Type list name here" required="required" /></td>
-                </tr>
-                <tr>
-                    <td>List Description: </td>
-                    <td><textarea name="list_description" placeholder="Type List Description Here"></textarea></td>
-                </tr>
-                
-                <tr>
-                    <td><input class="btn-primary btn-lg" type="submit" name="submit" value="SAVE" /></td>
-                </tr>
-                
-            </table>
-            
-        </form>
-        
-        <!-- Form to Add List Ends Here -->
+    </p>
+    
+    <form method="POST" action="">
+        <div class="form-group">
+            <label for="list_name">List Name:</label>
+            <input type="text" class="form-control" id="list_name" name="list_name" placeholder="Type list name here" required>
         </div>
-    </body>
+        
+        <div class="form-group">
+            <label for="list_description">List Description:</label>
+            <textarea class="form-control" id="list_description" name="list_description" placeholder="Type List Description Here"></textarea>
+        </div>
+        
+        <button type="submit" name="submit" class="btn btn-primary btn-lg">SAVE</button>
+    </form>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
 </html>
 
-
 <?php 
-
-    //Check whether the form is submitted or not
     if(isset($_POST['submit']))
     {
-        //echo "Form Submitted";
-        
-        //Get the values from form and save it in variables
         $list_name = $_POST['list_name'];
         $list_description = $_POST['list_description'];
         
-        //Connect Database
-        $conn = mysqli_connect(LOCALHOST, DB_USERNAME, DB_PASSWORD) or die(mysqli_error());
-       
-        
-        //SElect Database
+        $conn = mysqli_connect(LOCALHOST, DB_USERNAME, DB_PASSWORD) or die(mysqli_error($conn));
         $db_select = mysqli_select_db($conn, DB_NAME);
-        
-       
         
         $sql = "INSERT INTO tbl_list SET 
             list_name = '$list_name',
-            list_description = '$list_description'
-        ";
+            list_description = '$list_description'";
         
-        //Execute Query and Insert into Database
         $res = mysqli_query($conn, $sql);
         
-        //Check whether the query executed successfully or not
         if($res==true)
         {
-           
-            
-            
             $_SESSION['add'] = "List Added Successfully";
-            
-          
             header('location:'.SITEURL.'manage-list.php');
-            
-            
         }
         else
         {
-            //Failed to insert data
-            //echo "Failed to Insert Data";
-            
-            //Create SEssion to save message
             $_SESSION['add_fail'] = "Failed to Add List";
-            
-            
             header('location:'.SITEURL.'add-list.php');
         }
-        
     }
-
 ?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

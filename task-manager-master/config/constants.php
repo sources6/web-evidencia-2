@@ -8,6 +8,6 @@ define('DB_USERNAME', 'root');
 define('DB_PASSWORD', '');
 define('DB_NAME', 'task_manager');
 
-define('SITEURL', 'http://localhost/task-manager-master/');
+define('SITEURL', 'http://localhost/web-evidencia-2/task-manager-master/');
 
 ?>

@@ -1,22 +1,16 @@
 <?php 
-        //Include constants.php
+    //Include constants.php
     include('config/constants.php');
     //echo "Delete List Page";
-    
     
     if(isset($_GET['list_id']))
     {
         //Delete the List from database
-        
-       
         $list_id = $_GET['list_id'];
         
-        //Connect the DAtabase
-        $conn = mysqli_connect(LOCALHOST, DB_USERNAME, DB_PASSWORD) or die(mysqli_error());
-        
-        
-        $db_select = mysqli_select_db($conn, DB_NAME) or die(mysqli_error());
-        
+        //Connect the Database
+        $conn = mysqli_connect(LOCALHOST, DB_USERNAME, DB_PASSWORD) or die(mysqli_error($conn));
+        $db_select = mysqli_select_db($conn, DB_NAME) or die(mysqli_error($conn));
         
         $sql = "DELETE FROM tbl_list WHERE list_id=$list_id";
         
@@ -44,9 +38,26 @@
         //Redirect to Manage List Page
         header('location:'.SITEURL.'manage-list.php');
     }
-    
-
-    
-    
-    
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete List</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="alert alert-info" role="alert">
+            Processing list deletion...
+        </div>
+    </div>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
